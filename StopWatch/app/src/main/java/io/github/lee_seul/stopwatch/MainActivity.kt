@@ -3,6 +3,7 @@ package io.github.lee_seul.stopwatch
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.concurrent.timer
@@ -59,7 +60,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun recordLapTime() {
-        if (time == 0) return
+        if (time == 0) {
+            Toast.makeText(this, "기록불가능", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val lapTime = this.time
         val textView = TextView(this)
