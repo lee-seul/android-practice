@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun recordLapTime() {
+        if (time == 0) return
+
         val lapTime = this.time
         val textView = TextView(this)
 
