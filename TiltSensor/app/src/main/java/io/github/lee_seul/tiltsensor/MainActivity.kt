@@ -13,6 +13,7 @@ import android.view.WindowManager
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
+    private lateinit var tiltView: TiltView
     private val sensorManager by lazy {
         getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
@@ -25,7 +26,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // 화면이 가로 모드로 고정되게 하기
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        tiltView = TiltView(this)
+        setContentView(tiltView)
     }
 
     override fun onResume() {
@@ -48,6 +51,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         event?.let {
             Log.d("MainActivity", "onSensorChanged: x:" +
                     "${event.values[0]}, y: ${event.values[1]}, z: ${event.values[2]}")
+
+            tiltView.onSensorEvent(event!!)
         }
     }
 }
