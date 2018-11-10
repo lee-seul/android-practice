@@ -5,13 +5,16 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.yesButton
+import kotlin.concurrent.timer
 
 
 class MainActivity : AppCompatActivity() {
@@ -64,13 +67,29 @@ class MainActivity : AppCompatActivity() {
             null,
             MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC")
 
+        val fragments = ArrayList<Fragment>()
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 val uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
                 Log.d("MainActivity", uri)
+                fragments.add(PhotoFragment.newInstance(uri))
             }
 
             cursor.close()
+        }
+
+        val adapter = MyPagerAdapter(supportFragmentManager)
+        adapter.updateFragement(fragments)
+        viewPager.adapter = adapter
+
+        timer(period = 3000) {
+            runOnUiThread {
+                if (viewPager.currentItem < adapter.count - 1) {
+                    viewPager.currentItem = viewPager.currentItem + 1
+                } else {
+                    viewPager.currentItem = 0
+                }
+            }
         }
     }
 }
